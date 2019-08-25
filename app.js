@@ -1,11 +1,57 @@
-const chalk = require('chalk');
-console.log(chalk.blue("Hello world"));
-let integer = 2;
-if(integer % 2 != 0) {
-    console.log(chalk.green("Yes...GO GREEN"));
-} else {
-    console.log(chalk.bgRed("Fucked up"));
-}
-console.log(chalk.yellow("Yeah"));
+const yargs = require('yargs')
+const notes = require('./notes')
+yargs.command({
+    command: 'add',
+    describe: 'Add a new note',
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        },
+        body: {
+            describe: 'Note body',
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler(argv) {
+        notes.addNote(argv.title, argv.body)
+    }
+})
 
-console.log(process.argv[2])
+yargs.command({
+    command: 'remove',
+    describe: 'Remove a note',
+    builder: {
+        title: {
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler(argv) {
+        notes.removeNote(argv.title)
+    }
+})
+yargs.command({
+    command: 'list',
+    describe: 'Create List',
+    handler: function() {
+        notes.listNotes()
+    }
+})
+yargs.command({
+    command: 'read',
+    describe: 'Read the file',
+    builder: {
+        title: {
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler(argv) {
+        notes.readNote(argv.title)
+    }
+})
+yargs.parse()
+//console.log(yargs.argv);
